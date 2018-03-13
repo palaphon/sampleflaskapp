@@ -1,37 +1,24 @@
 node {
-    
-	dir("/root/"){
-    
-		checkout scm
-		
-		env.DOCKER_API_VERSION="1.23"
+    dir("/home/jenkins/workspace/my-pipeline/"){
+    checkout scm
 
-		appName = "default/demoapp"
+    env.DOCKER_API_VERSION="1.23"
+    appName = "default/flask-app"
+    registryHost = "mycluster.icp:8500/"
+    imageName = "${registryHost}${appName}:${env.BUILD_ID}"
+    env.BUILDIMG=imageName
+    docker.withRegistry('https://mycluster.icp:8500/', 'docker'){
+    stage "Build"
 
-		registryHost = "icpinetiknowplus.tk:8500/default/"
+        def pcImg = docker.build("mycluster.icp:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile.ppc64le .")
+        sh "cp /var/jenkin_home/.dockercfg ${HOME}/.dockercfg"
+        pcImg.push()
 
-		imageName = "${registryHost}demoapp:latest"
+    input 'Do you want to proceed with Deployment?'
+    stage "Deploy"
 
-		env.BUILDIMG=imageName
-
-		docker.withRegistry('https://icpinetiknowplus.tk:8500/', 'docker'){
-
-			stage "Build"
-
-				def pcImg = docker.build("icpinetiknowplus.tk:8500/default/demoapp:latest", "-f Dockerfile .")
-
-				sh "cp /var/jenkins_home/.dockercfg ${HOME}/.dockercfg"
-
-				pcImg.push()
-
-				input 'Do you want to proceed with Deployment?'
-
-			stage "Deploy"
-
-				sh "kubectl set image deployment/demoapp-demochart demochart=${imageName}"
-
-				sh "kubectl rollout status deployment/demoapp-demochart"
-
-		}
-	}
+        sh "kubectl set image deployment/demoapp-demochart demochart=${imageName}"
+        sh "kubectl rollout status deployment/demoapp-demochart"
+}
+}
 }
