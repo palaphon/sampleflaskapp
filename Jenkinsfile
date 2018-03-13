@@ -1,6 +1,6 @@
 node {
     
-	dir("/root/"){
+	dir("/home/jenkins/workspace/my-pipeline"){
     
 		checkout scm
 		
