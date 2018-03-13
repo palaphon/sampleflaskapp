@@ -1,5 +1,5 @@
 node {
-    dir("/home/jenkins/workspace/my-pipeline/"){
+    dir("/root/"){
     checkout scm
 
     env.DOCKER_API_VERSION="1.23"
@@ -11,7 +11,7 @@ node {
     stage "Build"
 
         def pcImg = docker.build("mycluster.icp:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile.ppc64le .")
-        sh "cp /home/jenkins/.dockercfg ${HOME}/.dockercfg"
+        sh "cp /root/.dockercfg ${HOME}/.dockercfg"
         pcImg.push()
 
     input 'Do you want to proceed with Deployment?'
