@@ -20,7 +20,7 @@ node {
 
 				def pcImg = docker.build("icpinetiknowplus.tk:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile .")
 
-				sh "cp /root/.dockercfg ${HOME}/.dockercfg"
+				sh "cp /var/jenkins_home/.dockercfg ${HOME}/.dockercfg"
 
 				pcImg.push()
 
