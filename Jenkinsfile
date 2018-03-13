@@ -1,25 +1,37 @@
 node {
-    dir("/home/jenkins/workspace/for-this-demo/"){
-    checkout scm
+    
+	dir("/root/"){
+    
+		checkout scm
+		
+		env.DOCKER_API_VERSION="1.23"
 
-    env.DOCKER_API_VERSION="1.23"
-    appName = "default/flask-app"
-    registryHost = "192.168.56.106:8500/"
-    imageName = "${registryHost}${appName}:${env.BUILD_ID}"
-    env.BUILDIMG=imageName
-    docker.withRegistry('https://192.168.56.106:8500/', 'docker'){
-    stage "Build"
+		appName = "default/flask-app"
 
-        def pcImg = docker.build("192.168.56.106:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile .")
-        sh "cp /root/.dockercfg ${HOME}/.dockercfg"
-        pcImg.push()
+		registryHost = "icpinetiknowplus.tk:8500/"
 
-    input 'Do you want to proceed with Deployment?'
-    stage "Deploy"
+		imageName = "${registryHost}${appName}:${env.BUILD_ID}"
 
-        sh "kubectl set image deployment/demoapp-demochart demochart=${imageName}"
-        sh "kubectl rollout status deployment/demoapp-demochart"
+		env.BUILDIMG=imageName
+
+		docker.withRegistry('https://icpinetiknowplus.tk:8500/', 'docker'){
+
+			stage "Build"
+
+				def pcImg = docker.build("icpinetiknowplus.tk:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile .")
+
+				sh "cp /root/.dockercfg ${HOME}/.dockercfg"
+
+				pcImg.push()
+
+				input 'Do you want to proceed with Deployment?'
+
+			stage "Deploy"
+
+				sh "kubectl set image deployment/demoapp-demochart demochart=${imageName}"
+
+				sh "kubectl rollout status deployment/demoapp-demochart"
+
+		}
+	}
 }
-}
-}
-
