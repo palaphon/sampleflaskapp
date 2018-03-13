@@ -8,7 +8,7 @@ node {
 
 		appName = "default/demoapp"
 
-		registryHost = "icpinetiknowplus.tk:8500/"
+		registryHost = "icpinetiknowplus.tk:8500/default/"
 
 		imageName = "${registryHost}demoapp:latest"
 
