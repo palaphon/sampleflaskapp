@@ -10,7 +10,7 @@ node {
 
 		registryHost = "icpinetiknowplus.tk:8500/"
 
-		imageName = "${registryHost}${appName}:${env.BUILD_ID}"
+		imageName = "${registryHost}${appName}:4"
 
 		env.BUILDIMG=imageName
 
@@ -18,7 +18,7 @@ node {
 
 			stage "Build"
 
-				def pcImg = docker.build("icpinetiknowplus.tk:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile .")
+				def pcImg = docker.build("icpinetiknowplus.tk:8500/default/flask-app:4", "-f Dockerfile .")
 
 				sh "cp /var/jenkins_home/.dockercfg ${HOME}/.dockercfg"
 
