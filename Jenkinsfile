@@ -14,7 +14,9 @@ node {
         sh "cp /var/jenkins_home/.dockercfg ${HOME}/.dockercfg"
         pcImg.push()
 
-    #input 'Do you want to proceed with Deployment?'
+    /**
+    input 'Do you want to proceed with Deployment?'
+    **/
     stage "Deploy"
 
         sh "kubectl set image deployment/demoapp-demochart demochart=${imageName}"
