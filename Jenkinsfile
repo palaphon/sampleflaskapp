@@ -1,16 +1,16 @@
 node {
-    dir("/home/jenkins/workspace/test/"){
+    dir("/root/"){
     checkout scm
 
     env.DOCKER_API_VERSION="1.23"
     appName = "default/flask-app"
-    registryHost = "mycluster.icp:8500/"
+    registryHost = "cloudissp.com:8500/"
     imageName = "${registryHost}${appName}:${env.BUILD_ID}"
     env.BUILDIMG=imageName
-    docker.withRegistry('http://mycluster.icp:8500/', 'docker'){
+    docker.withRegistry('http://cloudissp.com:8500/', 'docker'){
     stage "Build"
 
-        def pcImg = docker.build("mycluster.icp:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile .")
+        def pcImg = docker.build("cloudissp.com:8500/default/flask-app:${env.BUILD_ID}", "-f Dockerfile .")
         sh "cp /var/jenkins_home/.dockercfg ${HOME}/.dockercfg"
         pcImg.push()
 
